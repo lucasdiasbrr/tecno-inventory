@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const ItemList = () => {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    // Fetch items from API
-    fetch('/api/items')
-      .then(response => response.json())
-      .then(data => setItems(data));
+    fetchItems();
   }, []);
+
+  const fetchItems = async () => {
+    try {
+      const response = await axios.get('/api/items');
+      setItems(response.data);
+    } catch (error) {
+      console.error('Error fetching items:', error);
+    }
+  };
 
   return (
     <div>

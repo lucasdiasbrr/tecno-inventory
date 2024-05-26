@@ -1,29 +1,23 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const ItemForm = () => {
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [category, setCategory] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newItem = { name, quantity, category };
-    // Send item to API
-    fetch('/api/items', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newItem),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Item added:', data);
-      // Clear the form
+    try {
+      await axios.post('/api/items', newItem);
       setName('');
       setQuantity('');
       setCategory('');
-    });
+      // Optionally, redirect or give feedback to the user
+    } catch (error) {
+      console.error('Error adding item:', error);
+    }
   };
 
   return (
