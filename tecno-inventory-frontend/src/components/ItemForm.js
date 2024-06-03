@@ -1,20 +1,21 @@
+// tecno-inventory-frontend/src/components/ItemForm.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import { addItem } from '../services/itemService';
 
-const ItemForm = () => {
+const ItemForm = ({ onItemAdded }) => {
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [category, setCategory] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newItem = { name, quantity, category };
     try {
-      await axios.post('/api/items', newItem);
+      const newItem = { name, quantity: parseInt(quantity), category };
+      const createdItem = await addItem(newItem);
+      onItemAdded(createdItem);
       setName('');
       setQuantity('');
       setCategory('');
-      // Optionally, redirect or give feedback to the user
     } catch (error) {
       console.error('Error adding item:', error);
     }
@@ -22,32 +23,26 @@ const ItemForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        <label>Item Name</label>
-        <input 
-          type="text" 
-          value={name} 
-          onChange={(e) => setName(e.target.value)} 
-          required 
-        />
-      </div>
-      <div>
-        <label>Quantity</label>
-        <input 
-          type="number" 
-          value={quantity} 
-          onChange={(e) => setQuantity(e.target.value)} 
-          required 
-        />
-      </div>
-      <div>
-        <label>Category</label>
-        <input 
-          type="text" 
-          value={category} 
-          onChange={(e) => setCategory(e.target.value)} 
-        />
-      </div>
+      <input
+        type="text"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+      <input
+        type="number"
+        placeholder="Quantity"
+        value={quantity}
+        onChange={(e) => setQuantity(e.target.value)}
+        required
+      />
+      <input
+        type="text"
+        placeholder="Category"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+      />
       <button type="submit">Add Item</button>
     </form>
   );

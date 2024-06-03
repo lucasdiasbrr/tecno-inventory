@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('database_name', 'username', 'password', {
+const sequelize = new Sequelize('tecno-inventory-db', 'postgres', 'lucas123', {
   host: 'localhost',
   dialect: 'postgres',
 });

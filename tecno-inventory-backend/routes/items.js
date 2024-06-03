@@ -13,53 +13,50 @@ router.post('/items', async (req, res) => {
   }
 });
 
-module.exports = router;
-
 // Rota para leitura de itens
 router.get('/items', async (req, res) => {
-    try {
-      const items = await Item.findAll();
-      res.status(200).json(items);
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch items' });
-    }
-  });
-  
-  // Rota para atualização de item
+  try {
+    const items = await Item.findAll();
+    res.status(200).json(items);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch items' });
+  }
+});
+
+// Rota para atualização de item
 router.put('/items/:id', async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { name, quantity, category } = req.body;
-      const item = await Item.findByPk(id);
-      if (item) {
-        item.name = name;
-        item.quantity = quantity;
-        item.category = category;
-        await item.save();
-        res.status(200).json(item);
-      } else {
-        res.status(404).json({ error: 'Item not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to update item' });
+  try {
+    const { id } = req.params;
+    const { name, quantity, category } = req.body;
+    const item = await Item.findByPk(id);
+    if (item) {
+      item.name = name;
+      item.quantity = quantity;
+      item.category = category;
+      await item.save();
+      res.status(200).json(item);
+    } else {
+      res.status(404).json({ error: 'Item not found' });
     }
-  });
-  
-  // Rota para exclusão de item
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update item' });
+  }
+});
+
+// Rota para exclusão de item
 router.delete('/items/:id', async (req, res) => {
-    try {
-      const { id } = req.params;
-      const item = await Item.findByPk(id);
-      if (item) {
-        await item.destroy();
-        res.status(204).json({ message: 'Item deleted' });
-      } else {
-        res.status(404).json({ error: 'Item not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to delete item' });
+  try {
+    const { id } = req.params;
+    const item = await Item.findByPk(id);
+    if (item) {
+      await item.destroy();
+      res.status(204).json({ message: 'Item deleted' });
+    } else {
+      res.status(404).json({ error: 'Item not found' });
     }
-  });
-  
-  module.exports = router;
-  
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete item' });
+  }
+});
+
+module.exports = router;

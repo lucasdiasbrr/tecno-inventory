@@ -1,5 +1,6 @@
+// tecno-inventory-frontend/src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import ItemList from './components/ItemList';
 import ItemForm from './components/ItemForm';
 
@@ -13,14 +14,10 @@ const App = () => {
         </ul>
       </nav>
       <div>
-        <Switch>
-          <Route path="/add-item">
-            <ItemForm />
-          </Route>
-          <Route path="/">
-            <ItemList />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/add-item" element={<ItemForm />} />
+          <Route path="/" element={<ItemList />} />
+        </Routes>
       </div>
     </Router>
   );

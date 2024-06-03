@@ -1,23 +1,20 @@
+// tecno-inventory-backend/index.js
 const express = require('express');
-const app = express();
-const sequelize = require('./config/database');
-const Item = require('./models/item');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const { sequelize } = require('./config/database');
 const itemRoutes = require('./routes/items');
 
-const port = 3000;
+const app = express();
 
-app.use(express.json());
-app.use('/api', itemRoutes);
+app.use(cors());
+app.use(bodyParser.json());
+app.use('/api/items', itemRoutes);
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+const PORT = process.env.PORT || 3000;
 
-// Sincronizar o banco de dados
-sequelize.sync({ force: true }).then(() => {
-  console.log('Database & tables created!');
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+sequelize.sync().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
 });
