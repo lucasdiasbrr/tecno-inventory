@@ -14,7 +14,9 @@ const ItemForm = ({ onItemAdded }) => {
     try {
       const newItem = { name, quantity, category };
       await addItem(newItem);
-      onItemAdded();
+      if (onItemAdded) {
+        onItemAdded();
+      }
       setName('');
       setQuantity('');
       setCategory('');

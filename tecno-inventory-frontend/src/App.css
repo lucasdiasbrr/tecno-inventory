@@ -1,3 +1,5 @@
+/* App.css */
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
@@ -28,16 +30,43 @@ nav {
 nav ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 nav ul li {
-  display: inline;
+  display: inline-block;
+  position: relative;
   margin: 0 10px;
 }
 
 nav ul li a {
   color: #fff;
   text-decoration: none;
+  padding: 10px 15px;
+  display: block;
+}
+
+nav ul li ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #333;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li:hover ul {
+  display: block;
+}
+
+nav ul li ul li {
+  display: block;
+}
+
+nav ul li ul li a {
+  padding: 10px;
+  white-space: nowrap;
 }
 
 button {
@@ -100,4 +129,9 @@ table td button {
 
 table td button:hover {
   background-color: #c9302c;
+}
+
+.table-container {
+  margin-top: 20px;
+  overflow-x: auto;
 }
