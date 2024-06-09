@@ -1,8 +1,7 @@
-// tecno-inventory-frontend/src/components/ItemList.js
 import React, { useEffect, useState } from 'react';
 import { getItems, deleteItem } from '../services/itemService';
 
-const ItemList = () => {
+const ItemList = ({ itemsUpdated }) => {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -11,34 +10,68 @@ const ItemList = () => {
         const items = await getItems();
         setItems(items || []);
       } catch (error) {
-        console.error('Failed to fetch items:', error);
+        console.error('Falha ao buscar itens:', error);
       }
     };
 
     fetchItems();
-  }, []);
+  }, [itemsUpdated]);
 
   const handleDelete = async (id) => {
     try {
       await deleteItem(id);
       setItems(items.filter(item => item.id !== id));
     } catch (error) {
-      console.error('Failed to delete item:', error);
+      console.error('Falha ao deletar item:', error);
     }
   };
 
+  const exportToCSV = () => {
+    const csvRows = [
+      ['Nome', 'Quantidade', 'Categoria'],
+      ...items.map(item => [item.name, item.quantity, item.category])
+    ];
+
+    const csvContent = csvRows.map(e => e.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', 'itens.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <div>
-      <h1>Item List</h1>
-      <ul>
-        {items.length === 0 && <li>No items found</li>}
-        {items.map(item => (
-          <li key={item.id}>
-            {item.name} - {item.quantity} - {item.category}
-            <button onClick={() => handleDelete(item.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+    <div className="container">
+      <h1>Lista de Itens</h1>
+      {items.length === 0 ? (
+        <p>Nenhum item encontrado</p>
+      ) : (
+        <>
+          <button onClick={exportToCSV}>Exportar para CSV</button>
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                <th>Categoria</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map(item => (
+                <tr key={item.id}>
+                  <td>{item.name}</td>
+                  <td>{item.quantity}</td>
+                  <td>{item.category}</td>
+                  <td><button onClick={() => handleDelete(item.id)}>Deletar</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 };

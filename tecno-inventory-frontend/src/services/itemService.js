@@ -7,7 +7,7 @@ export const getItems = async () => {
     const response = await axios.get(API_URL);
     return response.data;
   } catch (error) {
-    console.error('Error fetching items:', error);
+    console.error('Erro ao buscar itens:', error);
     throw error;
   }
 };
@@ -17,7 +17,7 @@ export const addItem = async (item) => {
     const response = await axios.post(API_URL, item);
     return response.data;
   } catch (error) {
-    console.error('Error adding item:', error);
+    console.error('Erro ao adicionar item:', error);
     throw error;
   }
 };
@@ -27,7 +27,7 @@ export const deleteItem = async (id) => {
     const response = await axios.delete(`${API_URL}/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error deleting item:', error);
+    console.error('Erro ao deletar item:', error);
     throw error;
   }
 };
