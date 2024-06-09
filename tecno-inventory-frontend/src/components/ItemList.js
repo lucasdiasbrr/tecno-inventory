@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getItems, deleteItem } from '../services/itemService';
+import '../App.css';
 
 const ItemList = ({ itemsUpdated }) => {
   const [items, setItems] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -26,10 +28,34 @@ const ItemList = ({ itemsUpdated }) => {
     }
   };
 
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedItems = React.useMemo(() => {
+    let sortableItems = [...items];
+    if (sortConfig.key) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [items, sortConfig]);
+
   const exportToCSV = () => {
     const csvRows = [
       ['Nome', 'Quantidade', 'Categoria'],
-      ...items.map(item => [item.name, item.quantity, item.category])
+      ...sortedItems.map(item => [item.name, item.quantity, item.category])
     ];
 
     const csvContent = csvRows.map(e => e.join(',')).join('\n');
@@ -45,22 +71,28 @@ const ItemList = ({ itemsUpdated }) => {
   return (
     <div className="container">
       <h1>Lista de Itens</h1>
+      <button onClick={exportToCSV}>Exportar para CSV</button>
       {items.length === 0 ? (
         <p>Nenhum item encontrado</p>
       ) : (
-        <>
-          <button onClick={exportToCSV}>Exportar para CSV</button>
+        <div className="table-container">
           <table>
             <thead>
               <tr>
-                <th>Nome</th>
-                <th>Quantidade</th>
-                <th>Categoria</th>
+                <th onClick={() => requestSort('name')}>
+                  Nome {sortConfig.key === 'name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('quantity')}>
+                  Quantidade {sortConfig.key === 'quantity' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('category')}>
+                  Categoria {sortConfig.key === 'category' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
                 <th>Ação</th>
               </tr>
             </thead>
             <tbody>
-              {items.map(item => (
+              {sortedItems.map(item => (
                 <tr key={item.id}>
                   <td>{item.name}</td>
                   <td>{item.quantity}</td>
@@ -70,7 +102,7 @@ const ItemList = ({ itemsUpdated }) => {
               ))}
             </tbody>
           </table>
-        </>
+        </div>
       )}
     </div>
   );
