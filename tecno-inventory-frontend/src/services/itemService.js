@@ -1,18 +1,33 @@
-// tecno-inventory-frontend/src/services/itemService.js
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:3000/api/items';
+const API_URL = 'http://localhost:5000/api/items';
 
 export const getItems = async () => {
-  const response = await axios.get(apiUrl);
-  return response.data;
+  try {
+    const response = await axios.get(API_URL);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    throw error;
+  }
 };
 
 export const addItem = async (item) => {
-  const response = await axios.post(apiUrl, item);
-  return response.data;
+  try {
+    const response = await axios.post(API_URL, item);
+    return response.data;
+  } catch (error) {
+    console.error('Error adding item:', error);
+    throw error;
+  }
 };
 
 export const deleteItem = async (id) => {
-  await axios.delete(`${apiUrl}/${id}`);
+  try {
+    const response = await axios.delete(`${API_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting item:', error);
+    throw error;
+  }
 };
