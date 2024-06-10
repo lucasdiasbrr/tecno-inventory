@@ -13,7 +13,7 @@ const ItemList = () => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const items = await getItems();
+        const items = await getItems(true); // Buscar itens com detalhes incluídos
         setItems(items || []);
       } catch (error) {
         console.error('Falha ao buscar itens:', error);
@@ -109,35 +109,35 @@ const ItemList = () => {
                 <th onClick={() => requestSort('status', sortConfig, setSortConfig)}>
                   Status {sortConfig.key === 'status' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('brandId', sortConfig, setSortConfig)}>
-                  Marca {sortConfig.key === 'brandId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('brand.name', sortConfig, setSortConfig)}>
+                  Marca {sortConfig.key === 'brand.name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('modelId', sortConfig, setSortConfig)}>
-                  Modelo {sortConfig.key === 'modelId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('model.name', sortConfig, setSortConfig)}>
+                  Modelo {sortConfig.key === 'model.name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('categoryId', sortConfig, setSortConfig)}>
-                  Categoria {sortConfig.key === 'categoryId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('category.name', sortConfig, setSortConfig)}>
+                  Categoria {sortConfig.key === 'category.name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('locationId', sortConfig, setSortConfig)}>
-                  Localização {sortConfig.key === 'locationId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('location.name', sortConfig, setSortConfig)}>
+                  Localização {sortConfig.key === 'location.name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('stateId', sortConfig, setSortConfig)}>
-                  Estado {sortConfig.key === 'stateId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('state.name', sortConfig, setSortConfig)}>
+                  Estado {sortConfig.key === 'state.name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('supplierId', sortConfig, setSortConfig)}>
-                  Fornecedor {sortConfig.key === 'supplierId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('supplier.name', sortConfig, setSortConfig)}>
+                  Fornecedor {sortConfig.key === 'supplier.name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('responsibleId', sortConfig, setSortConfig)}>
-                  Responsável {sortConfig.key === 'responsibleId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('responsible.name', sortConfig, setSortConfig)}>
+                  Responsável {sortConfig.key === 'responsible.name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('physicalConditionId', sortConfig, setSortConfig)}>
-                  Condição Física {sortConfig.key === 'physicalConditionId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('physicalCondition.name', sortConfig, setSortConfig)}>
+                  Condição Física {sortConfig.key === 'physicalCondition.name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('operatingSystemId', sortConfig, setSortConfig)}>
-                  Sistema Operacional {sortConfig.key === 'operatingSystemId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('operatingSystem.name', sortConfig, setSortConfig)}>
+                  Sistema Operacional {sortConfig.key === 'operatingSystem.name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('technicalSpecificationId', sortConfig, setSortConfig)}>
-                  Especificações Técnicas {sortConfig.key === 'technicalSpecificationId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('technicalSpecification.name', sortConfig, setSortConfig)}>
+                  Especificações Técnicas {sortConfig.key === 'technicalSpecification.name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
                 <th>Ação</th>
               </tr>
@@ -188,16 +188,16 @@ const ItemList = () => {
                       <td>{item.lastMaintenanceDate}</td>
                       <td>{item.nextMaintenanceDate}</td>
                       <td>{item.status}</td>
-                      <td>{item.brandId}</td>
-                      <td>{item.modelId}</td>
-                      <td>{item.categoryId}</td>
-                      <td>{item.locationId}</td>
-                      <td>{item.stateId}</td>
-                      <td>{item.supplierId}</td>
-                      <td>{item.responsibleId}</td>
-                      <td>{item.physicalConditionId}</td>
-                      <td>{item.operatingSystemId}</td>
-                      <td>{item.technicalSpecificationId}</td>
+                      <td>{item.brand?.name}</td>
+                      <td>{item.model?.name}</td>
+                      <td>{item.category?.name}</td>
+                      <td>{item.location?.name}</td>
+                      <td>{item.state?.name}</td>
+                      <td>{item.supplier?.name}</td>
+                      <td>{item.responsible?.name}</td>
+                      <td>{item.physicalCondition?.name}</td>
+                      <td>{item.operatingSystem?.name}</td>
+                      <td>{item.technicalSpecification?.name}</td>
                       <td>
                         <button onClick={() => handleEdit(item)}>Editar</button>
                         <button onClick={() => handleDelete(item.id)}>Deletar</button>

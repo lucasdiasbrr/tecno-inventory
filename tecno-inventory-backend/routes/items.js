@@ -1,17 +1,17 @@
 // routes/items.js
 const express = require('express');
 const router = express.Router();
-const Item = require('../models/item');
-const Brand = require('../models/brand');
-const Model = require('../models/model');
-const Category = require('../models/category');
-const Location = require('../models/location');
-const State = require('../models/state');
-const Supplier = require('../models/supplier');
-const Responsible = require('../models/responsible');
-const PhysicalCondition = require('../models/physicalCondition');
-const OperatingSystem = require('../models/operatingSystem');
-const TechnicalSpecification = require('../models/technicalSpecification');
+const Item = require('../models/Item');
+const Brand = require('../models/Brand');
+const Model = require('../models/Model');
+const Category = require('../models/Category');
+const Location = require('../models/Location');
+const State = require('../models/State');
+const Supplier = require('../models/Supplier');
+const Responsible = require('../models/Responsible');
+const PhysicalCondition = require('../models/PhysicalCondition');
+const OperatingSystem = require('../models/OperatingSystem');
+const TechnicalSpecification = require('../models/TechnicalSpecification');
 
 // Rota para criar item
 router.post('/', async (req, res) => {
