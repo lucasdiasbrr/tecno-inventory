@@ -18,7 +18,7 @@ import BrandList from './components/BrandList';
 import CategoryList from './components/CategoryList';
 import LocationList from './components/LocationList';
 import StateList from './components/StateList';
-import SupplierList from './components/SupplierList';
+import SupplierList from './components/SupplierList.js';
 import ResponsibleList from './components/ResponsibleList';
 import PhysicalConditionList from './components/PhysicalConditionList';
 import OperatingSystemList from './components/OperatingSystemList';

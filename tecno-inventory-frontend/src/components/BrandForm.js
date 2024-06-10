@@ -8,19 +8,19 @@ const BrandForm = () => {
         e.preventDefault();
         try {
             await axios.post('http://localhost:5000/api/brands', { name });
-            alert('Brand added successfully');
+            alert('Marca adicionada com sucesso');
             setName('');
         } catch (error) {
-            alert('Failed to add brand');
+            alert('Falha ao adicionar marca');
         }
     };
 
     return (
         <div className="container">
             <form onSubmit={handleSubmit}>
-                <h2>Add Brand</h2>
+                <h2>Adicionar Marca</h2>
                 <div>
-                    <label>Brand Name</label>
+                    <label>Nome da Marca</label>
                     <input
                         type="text"
                         value={name}
