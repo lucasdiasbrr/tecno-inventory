@@ -138,7 +138,7 @@ Foi aplicado o padrão de projeto **Client-Server** na arquitetura do backend pa
     "nodemon": "^3.1.1"
   }
 }
-```json
+```
 
 ## Package.json do Tecno Inventory Frontend
 
@@ -184,4 +184,4 @@ Foi aplicado o padrão de projeto **Client-Server** na arquitetura do backend pa
     ]
   }
 }
-```json
+```
