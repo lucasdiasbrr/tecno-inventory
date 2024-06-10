@@ -6,13 +6,6 @@ const Model = sequelize.define('Model', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  brandId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Brands',
-      key: 'id'
-    }
-  }
 });
 
 module.exports = Model;

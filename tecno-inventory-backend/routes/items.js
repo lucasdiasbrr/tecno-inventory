@@ -1,53 +1,71 @@
+// routes/items.js
 const express = require('express');
 const router = express.Router();
 const Item = require('../models/item');
+const Brand = require('../models/brand');
+const Model = require('../models/model');
+const Category = require('../models/category');
+const Location = require('../models/location');
+const State = require('../models/state');
+const Supplier = require('../models/supplier');
+const Responsible = require('../models/responsible');
+const PhysicalCondition = require('../models/physicalCondition');
+const OperatingSystem = require('../models/operatingSystem');
+const TechnicalSpecification = require('../models/technicalSpecification');
 
-// Rota para criação de item
+// Rota para criar item
 router.post('/', async (req, res) => {
   try {
-    const { name, quantity, category } = req.body;
-    const newItem = await Item.create({ name, quantity, category });
-    res.status(201).json(newItem);
+    const item = await Item.create(req.body);
+    res.status(201).json(item);
   } catch (error) {
-    res.status(500).json({ error: 'Falha ao criar o item' });
+    res.status(500).json({ error: 'Falha ao criar item', details: error.message });
   }
 });
 
-// Rota para leitura de itens
+// Rota para listar itens
 router.get('/', async (req, res) => {
   try {
-    const items = await Item.findAll();
+    const includeDetails = req.query.includeDetails === 'true';
+    const items = await Item.findAll({
+      include: includeDetails ? [
+        { model: Brand, as: 'brand' },
+        { model: Model, as: 'model' },
+        { model: Category, as: 'category' },
+        { model: Location, as: 'location' },
+        { model: State, as: 'state' },
+        { model: Supplier, as: 'supplier' },
+        { model: Responsible, as: 'responsible' },
+        { model: PhysicalCondition, as: 'physicalCondition' },
+        { model: OperatingSystem, as: 'operatingSystem' },
+        { model: TechnicalSpecification, as: 'technicalSpecification' }
+      ] : []
+    });
     res.status(200).json(items);
   } catch (error) {
     res.status(500).json({ error: 'Falha ao buscar itens' });
   }
 });
 
-// Rota para atualização de item
+// Rota para atualizar item
 router.put('/:id', async (req, res) => {
   try {
-    const { id } = req.params;
-    const { name, quantity, category } = req.body;
-    const item = await Item.findByPk(id);
+    const item = await Item.findByPk(req.params.id);
     if (item) {
-      item.name = name;
-      item.quantity = quantity;
-      item.category = category;
-      await item.save();
+      await item.update(req.body);
       res.status(200).json(item);
     } else {
       res.status(404).json({ error: 'Item não encontrado' });
     }
   } catch (error) {
-    res.status(500).json({ error: 'Falha ao atualizar o item' });
+    res.status(500).json({ error: 'Falha ao atualizar item' });
   }
 });
 
-// Rota para exclusão de item
+// Rota para deletar item
 router.delete('/:id', async (req, res) => {
   try {
-    const { id } = req.params;
-    const item = await Item.findByPk(id);
+    const item = await Item.findByPk(req.params.id);
     if (item) {
       await item.destroy();
       res.status(204).json({ message: 'Item deletado com sucesso' });
@@ -55,7 +73,7 @@ router.delete('/:id', async (req, res) => {
       res.status(404).json({ error: 'Item não encontrado' });
     }
   } catch (error) {
-    res.status(500).json({ error: 'Falha ao deletar o item' });
+    res.status(500).json({ error: 'Falha ao deletar item' });
   }
 });
 

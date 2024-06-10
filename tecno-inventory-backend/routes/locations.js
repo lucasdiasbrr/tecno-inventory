@@ -23,4 +23,38 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Rota para atualizar localização
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const location = await Location.findByPk(id);
+    if (location) {
+      location.name = name;
+      await location.save();
+      res.status(200).json(location);
+    } else {
+      res.status(404).json({ error: 'Localização não encontrada' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Falha ao atualizar localização' });
+  }
+});
+
+// Rota para excluir localização
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const location = await Location.findByPk(id);
+    if (location) {
+      await location.destroy();
+      res.status(204).json({ message: 'Localização deletada com sucesso' });
+    } else {
+      res.status(404).json({ error: 'Localização não encontrada' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Falha ao deletar localização' });
+  }
+});
+
 module.exports = router;

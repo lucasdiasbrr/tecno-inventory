@@ -1,26 +1,30 @@
+// components/TechnicalSpecificationForm.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import { addTechnicalSpecification } from '../services/technicalSpecificationService';
 
 const TechnicalSpecificationForm = () => {
   const [name, setName] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/technicalSpecifications', { name });
-      alert('Especificação Técnica adicionada com sucesso');
+      await addTechnicalSpecification({ name });
       setName('');
+      setError('');
+      alert('Especificação técnica adicionada com sucesso!');
     } catch (error) {
-      alert('Falha ao adicionar especificação técnica');
+      setError('Erro ao adicionar especificação técnica. Por favor, tente novamente.');
     }
   };
 
   return (
     <div className="container">
+      <h1>Adicionar Especificação Técnica</h1>
+      {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <h2>Adicionar Especificação Técnica</h2>
         <div>
-          <label>Nome da Especificação Técnica</label>
+          <label>Nome</label>
           <input
             type="text"
             value={name}
@@ -28,7 +32,7 @@ const TechnicalSpecificationForm = () => {
             required
           />
         </div>
-        <button type="submit">Adicionar Especificação Técnica</button>
+        <button type="submit">Adicionar</button>
       </form>
     </div>
   );

@@ -22,10 +22,19 @@ export const addModel = async (model) => {
   }
 };
 
+export const updateModel = async (id, model) => {
+  try {
+    const response = await axios.put(`${API_URL}/${id}`, model);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao atualizar modelo:', error);
+    throw error;
+  }
+};
+
 export const deleteModel = async (id) => {
   try {
-    const response = await axios.delete(`${API_URL}/${id}`);
-    return response.data;
+    await axios.delete(`${API_URL}/${id}`);
   } catch (error) {
     console.error('Erro ao deletar modelo:', error);
     throw error;

@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { getItems, deleteItem } from '../services/itemService';
+import { getItems, deleteItem, updateItem } from '../services/itemService';
+import { exportToCSV } from '../utils/exportCsv';
+import { requestSort, getSortedItems } from '../utils/sortUtils';
 import '../App.css';
 
-const ItemList = ({ itemsUpdated }) => {
+const ItemList = () => {
   const [items, setItems] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
+  const [editingItemId, setEditingItemId] = useState(null);
+  const [editedItem, setEditedItem] = useState({});
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -17,7 +21,7 @@ const ItemList = ({ itemsUpdated }) => {
     };
 
     fetchItems();
-  }, [itemsUpdated]);
+  }, []);
 
   const handleDelete = async (id) => {
     try {
@@ -28,50 +32,40 @@ const ItemList = ({ itemsUpdated }) => {
     }
   };
 
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
+  const handleEdit = (item) => {
+    setEditingItemId(item.id);
+    setEditedItem(item);
   };
 
-  const sortedItems = React.useMemo(() => {
-    let sortableItems = [...items];
-    if (sortConfig.key) {
-      sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
+  const handleSave = async () => {
+    try {
+      await updateItem(editingItemId, editedItem);
+      setItems(items.map(item => (item.id === editingItemId ? editedItem : item)));
+      setEditingItemId(null);
+    } catch (error) {
+      console.error('Falha ao atualizar item:', error);
     }
-    return sortableItems;
-  }, [items, sortConfig]);
-
-  const exportToCSV = () => {
-    const csvRows = [
-      ['Nome', 'Quantidade', 'Categoria'],
-      ...sortedItems.map(item => [item.name, item.quantity, item.category])
-    ];
-
-    const csvContent = csvRows.map(e => e.join(',')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute('download', 'itens.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditedItem({ ...editedItem, [name]: value });
+  };
+
+  const sortedItems = getSortedItems(items, sortConfig);
 
   return (
     <div className="container">
       <h1>Lista de Itens</h1>
-      <button onClick={exportToCSV}>Exportar para CSV</button>
+      <button onClick={() => exportToCSV(sortedItems, 'itens.csv', [
+        'Nome', 'Quantidade', 'Número de Série', 'Preço', 'Descrição', 'Data de Compra',
+        'Garantia', 'Código de Patrimônio', 'Notas Adicionais', 'Data da Última Manutenção',
+        'Próxima Data de Manutenção', 'Status', 'Marca', 'Modelo', 'Categoria', 'Localização',
+        'Estado', 'Fornecedor', 'Responsável', 'Condição Física', 'Sistema Operacional',
+        'Especificações Técnicas'
+      ])}>
+        Exportar para CSV
+      </button>
       {items.length === 0 ? (
         <p>Nenhum item encontrado</p>
       ) : (
@@ -79,14 +73,71 @@ const ItemList = ({ itemsUpdated }) => {
           <table>
             <thead>
               <tr>
-                <th onClick={() => requestSort('name')}>
+                <th onClick={() => requestSort('name', sortConfig, setSortConfig)}>
                   Nome {sortConfig.key === 'name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('quantity')}>
+                <th onClick={() => requestSort('quantity', sortConfig, setSortConfig)}>
                   Quantidade {sortConfig.key === 'quantity' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
-                <th onClick={() => requestSort('category')}>
-                  Categoria {sortConfig.key === 'category' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                <th onClick={() => requestSort('serialNumber', sortConfig, setSortConfig)}>
+                  Número de Série {sortConfig.key === 'serialNumber' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('price', sortConfig, setSortConfig)}>
+                  Preço {sortConfig.key === 'price' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('description', sortConfig, setSortConfig)}>
+                  Descrição {sortConfig.key === 'description' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('purchaseDate', sortConfig, setSortConfig)}>
+                  Data de Compra {sortConfig.key === 'purchaseDate' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('warranty', sortConfig, setSortConfig)}>
+                  Garantia {sortConfig.key === 'warranty' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('assetCode', sortConfig, setSortConfig)}>
+                  Código de Patrimônio {sortConfig.key === 'assetCode' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('additionalNotes', sortConfig, setSortConfig)}>
+                  Notas Adicionais {sortConfig.key === 'additionalNotes' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('lastMaintenanceDate', sortConfig, setSortConfig)}>
+                  Data da Última Manutenção {sortConfig.key === 'lastMaintenanceDate' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('nextMaintenanceDate', sortConfig, setSortConfig)}>
+                  Próxima Data de Manutenção {sortConfig.key === 'nextMaintenanceDate' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('status', sortConfig, setSortConfig)}>
+                  Status {sortConfig.key === 'status' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('brandId', sortConfig, setSortConfig)}>
+                  Marca {sortConfig.key === 'brandId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('modelId', sortConfig, setSortConfig)}>
+                  Modelo {sortConfig.key === 'modelId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('categoryId', sortConfig, setSortConfig)}>
+                  Categoria {sortConfig.key === 'categoryId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('locationId', sortConfig, setSortConfig)}>
+                  Localização {sortConfig.key === 'locationId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('stateId', sortConfig, setSortConfig)}>
+                  Estado {sortConfig.key === 'stateId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('supplierId', sortConfig, setSortConfig)}>
+                  Fornecedor {sortConfig.key === 'supplierId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('responsibleId', sortConfig, setSortConfig)}>
+                  Responsável {sortConfig.key === 'responsibleId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('physicalConditionId', sortConfig, setSortConfig)}>
+                  Condição Física {sortConfig.key === 'physicalConditionId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('operatingSystemId', sortConfig, setSortConfig)}>
+                  Sistema Operacional {sortConfig.key === 'operatingSystemId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                </th>
+                <th onClick={() => requestSort('technicalSpecificationId', sortConfig, setSortConfig)}>
+                  Especificações Técnicas {sortConfig.key === 'technicalSpecificationId' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
                 </th>
                 <th>Ação</th>
               </tr>
@@ -94,10 +145,65 @@ const ItemList = ({ itemsUpdated }) => {
             <tbody>
               {sortedItems.map(item => (
                 <tr key={item.id}>
-                  <td>{item.name}</td>
-                  <td>{item.quantity}</td>
-                  <td>{item.category}</td>
-                  <td><button onClick={() => handleDelete(item.id)}>Deletar</button></td>
+                  {editingItemId === item.id ? (
+                    <>
+                      <td><input type="text" name="name" value={editedItem.name} onChange={handleChange} /></td>
+                      <td><input type="number" name="quantity" value={editedItem.quantity} onChange={handleChange} /></td>
+                      <td><input type="text" name="serialNumber" value={editedItem.serialNumber} onChange={handleChange} /></td>
+                      <td><input type="number" name="price" value={editedItem.price} onChange={handleChange} /></td>
+                      <td><textarea name="description" value={editedItem.description} onChange={handleChange}></textarea></td>
+                      <td><input type="date" name="purchaseDate" value={editedItem.purchaseDate} onChange={handleChange} /></td>
+                      <td><input type="text" name="warranty" value={editedItem.warranty} onChange={handleChange} /></td>
+                      <td><input type="text" name="assetCode" value={editedItem.assetCode} onChange={handleChange} /></td>
+                      <td><textarea name="additionalNotes" value={editedItem.additionalNotes} onChange={handleChange}></textarea></td>
+                      <td><input type="date" name="lastMaintenanceDate" value={editedItem.lastMaintenanceDate} onChange={handleChange} /></td>
+                      <td><input type="date" name="nextMaintenanceDate" value={editedItem.nextMaintenanceDate} onChange={handleChange} /></td>
+                      <td><input type="text" name="status" value={editedItem.status} onChange={handleChange} /></td>
+                      <td><input type="text" name="brandId" value={editedItem.brandId} onChange={handleChange} /></td>
+                      <td><input type="text" name="modelId" value={editedItem.modelId} onChange={handleChange} /></td>
+                      <td><input type="text" name="categoryId" value={editedItem.categoryId} onChange={handleChange} /></td>
+                      <td><input type="text" name="locationId" value={editedItem.locationId} onChange={handleChange} /></td>
+                      <td><input type="text" name="stateId" value={editedItem.stateId} onChange={handleChange} /></td>
+                      <td><input type="text" name="supplierId" value={editedItem.supplierId} onChange={handleChange} /></td>
+                      <td><input type="text" name="responsibleId" value={editedItem.responsibleId} onChange={handleChange} /></td>
+                      <td><input type="text" name="physicalConditionId" value={editedItem.physicalConditionId} onChange={handleChange} /></td>
+                      <td><input type="text" name="operatingSystemId" value={editedItem.operatingSystemId} onChange={handleChange} /></td>
+                      <td><input type="text" name="technicalSpecificationId" value={editedItem.technicalSpecificationId} onChange={handleChange} /></td>
+                      <td>
+                        <button onClick={handleSave}>Salvar</button>
+                        <button onClick={() => setEditingItemId(null)}>Cancelar</button>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td>{item.name}</td>
+                      <td>{item.quantity}</td>
+                      <td>{item.serialNumber}</td>
+                      <td>{item.price}</td>
+                      <td>{item.description}</td>
+                      <td>{item.purchaseDate}</td>
+                      <td>{item.warranty}</td>
+                      <td>{item.assetCode}</td>
+                      <td>{item.additionalNotes}</td>
+                      <td>{item.lastMaintenanceDate}</td>
+                      <td>{item.nextMaintenanceDate}</td>
+                      <td>{item.status}</td>
+                      <td>{item.brandId}</td>
+                      <td>{item.modelId}</td>
+                      <td>{item.categoryId}</td>
+                      <td>{item.locationId}</td>
+                      <td>{item.stateId}</td>
+                      <td>{item.supplierId}</td>
+                      <td>{item.responsibleId}</td>
+                      <td>{item.physicalConditionId}</td>
+                      <td>{item.operatingSystemId}</td>
+                      <td>{item.technicalSpecificationId}</td>
+                      <td>
+                        <button onClick={() => handleEdit(item)}>Editar</button>
+                        <button onClick={() => handleDelete(item.id)}>Deletar</button>
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>

@@ -23,4 +23,38 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Rota para atualizar condição física
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const physicalCondition = await PhysicalCondition.findByPk(id);
+    if (physicalCondition) {
+      physicalCondition.name = name;
+      await physicalCondition.save();
+      res.status(200).json(physicalCondition);
+    } else {
+      res.status(404).json({ error: 'Condição física não encontrada' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Falha ao atualizar condição física' });
+  }
+});
+
+// Rota para excluir condição física
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const physicalCondition = await PhysicalCondition.findByPk(id);
+    if (physicalCondition) {
+      await physicalCondition.destroy();
+      res.status(204).json({ message: 'Condição física deletada com sucesso' });
+    } else {
+      res.status(404).json({ error: 'Condição física não encontrada' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Falha ao deletar condição física' });
+  }
+});
+
 module.exports = router;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addModel } from '../services/modelServices';
+import { addModel } from '../services/modelService';
 
 const ModelForm = () => {
   const [name, setName] = useState('');

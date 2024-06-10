@@ -39,3 +39,9 @@ sequelize.sync().then(() => {
 }).catch((err) => {
   console.error('Falha ao sincronizar com o banco de dados:', err);
 });
+
+sequelize.sync({ alter: true }).then(() => {
+  console.log('Banco de dados sincronizado.');
+}).catch((err) => {
+  console.error('Falha ao sincronizar com o banco de dados:', err);
+});

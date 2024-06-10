@@ -1,3 +1,4 @@
+// App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import ItemList from './components/ItemList';
@@ -12,7 +13,16 @@ import ResponsibleForm from './components/ResponsibleForm';
 import PhysicalConditionForm from './components/PhysicalConditionForm';
 import OperatingSystemForm from './components/OperatingSystemForm';
 import TechnicalSpecificationForm from './components/TechnicalSpecificationForm';
-import './App.css';
+import ModelList from './components/ModelList';
+import BrandList from './components/BrandList';
+import CategoryList from './components/CategoryList';
+import LocationList from './components/LocationList';
+import StateList from './components/StateList';
+import SupplierList from './components/SupplierList';
+import ResponsibleList from './components/ResponsibleList';
+import PhysicalConditionList from './components/PhysicalConditionList';
+import OperatingSystemList from './components/OperatingSystemList';
+import TechnicalSpecificationList from './components/TechnicalSpecificationList';
 
 const App = () => {
   const [itemsUpdated, setItemsUpdated] = useState(false);
@@ -26,21 +36,40 @@ const App = () => {
       <nav>
         <ul>
           <li><Link to="/">Lista de Itens</Link></li>
-          <li><Link to="/add-item">Adicionar Item</Link></li>
           <li>
-            <a href="#">Cadastros</a>
-            <ul>
-              <li><Link to="/add-model">Adicionar Modelo</Link></li>
-              <li><Link to="/add-brand">Adicionar Marca</Link></li>
-              <li><Link to="/add-category">Adicionar Categoria</Link></li>
-              <li><Link to="/add-location">Adicionar Localização</Link></li>
-              <li><Link to="/add-state">Adicionar Estado</Link></li>
-              <li><Link to="/add-supplier">Adicionar Fornecedor</Link></li>
-              <li><Link to="/add-responsible">Adicionar Responsável</Link></li>
-              <li><Link to="/add-physical-condition">Adicionar Condição Física</Link></li>
-              <li><Link to="/add-operating-system">Adicionar Sistema Operacional</Link></li>
-              <li><Link to="/add-technical-specification">Adicionar Especificação Técnica</Link></li>
-            </ul>
+            <div className="dropdown">
+              <button className="dropbtn">Cadastros</button>
+              <div className="dropdown-content">
+                <Link to="/add-item">Adicionar Item</Link>
+                <Link to="/add-model">Adicionar Modelo</Link>
+                <Link to="/add-brand">Adicionar Marca</Link>
+                <Link to="/add-category">Adicionar Categoria</Link>
+                <Link to="/add-location">Adicionar Localização</Link>
+                <Link to="/add-state">Adicionar Estado</Link>
+                <Link to="/add-supplier">Adicionar Fornecedor</Link>
+                <Link to="/add-responsible">Adicionar Responsável</Link>
+                <Link to="/add-physical-condition">Adicionar Condição Física</Link>
+                <Link to="/add-operating-system">Adicionar Sistema Operacional</Link>
+                <Link to="/add-technical-specification">Adicionar Especificação Técnica</Link>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div className="dropdown">
+              <button className="dropbtn">Listas</button>
+              <div className="dropdown-content">
+                <Link to="/list-models">Modelos</Link>
+                <Link to="/list-brands">Marcas</Link>
+                <Link to="/list-categories">Categorias</Link>
+                <Link to="/list-locations">Localizações</Link>
+                <Link to="/list-states">Estados</Link>
+                <Link to="/list-suppliers">Fornecedores</Link>
+                <Link to="/list-responsibles">Responsáveis</Link>
+                <Link to="/list-physical-conditions">Condições Físicas</Link>
+                <Link to="/list-operating-systems">Sistemas Operacionais</Link>
+                <Link to="/list-technical-specifications">Especificações Técnicas</Link>
+              </div>
+            </div>
           </li>
         </ul>
       </nav>
@@ -58,6 +87,16 @@ const App = () => {
           <Route path="/add-physical-condition" element={<PhysicalConditionForm />} />
           <Route path="/add-operating-system" element={<OperatingSystemForm />} />
           <Route path="/add-technical-specification" element={<TechnicalSpecificationForm />} />
+          <Route path="/list-models" element={<ModelList />} />
+          <Route path="/list-brands" element={<BrandList />} />
+          <Route path="/list-categories" element={<CategoryList />} />
+          <Route path="/list-locations" element={<LocationList />} />
+          <Route path="/list-states" element={<StateList />} />
+          <Route path="/list-suppliers" element={<SupplierList />} />
+          <Route path="/list-responsibles" element={<ResponsibleList />} />
+          <Route path="/list-physical-conditions" element={<PhysicalConditionList />} />
+          <Route path="/list-operating-systems" element={<OperatingSystemList />} />
+          <Route path="/list-technical-specifications" element={<TechnicalSpecificationList />} />
         </Routes>
       </div>
     </Router>
