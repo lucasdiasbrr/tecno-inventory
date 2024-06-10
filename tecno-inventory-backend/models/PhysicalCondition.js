@@ -1,11 +1,11 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Responsible = sequelize.define('Responsible', {
+const PhysicalCondition = sequelize.define('PhysicalCondition', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
-module.exports = Responsible;
+module.exports = PhysicalCondition;
