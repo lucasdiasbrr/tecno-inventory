@@ -31,4 +31,3 @@ export const deleteSupplier = async (id) => {
     throw error;
   }
 };
-''

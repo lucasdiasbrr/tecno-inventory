@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getItems, deleteItem, updateItem } from '../services/itemService';
 import { exportToCSV } from '../utils/exportCsv';
 import { requestSort, getSortedItems } from '../utils/sortUtils';
+import { format } from 'date-fns';
 import '../App.css';
 
 const ItemList = () => {
@@ -50,6 +51,10 @@ const ItemList = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditedItem({ ...editedItem, [name]: value });
+  };
+
+  const formatDate = (date) => {
+    return date ? format(new Date(date), 'dd/MM/yyyy') : '';
   };
 
   const sortedItems = getSortedItems(items, sortConfig);
@@ -181,12 +186,12 @@ const ItemList = () => {
                       <td>{item.serialNumber}</td>
                       <td>{item.price}</td>
                       <td>{item.description}</td>
-                      <td>{item.purchaseDate}</td>
+                      <td>{formatDate(item.purchaseDate)}</td>
                       <td>{item.warranty}</td>
                       <td>{item.assetCode}</td>
                       <td>{item.additionalNotes}</td>
-                      <td>{item.lastMaintenanceDate}</td>
-                      <td>{item.nextMaintenanceDate}</td>
+                      <td>{formatDate(item.lastMaintenanceDate)}</td>
+                      <td>{formatDate(item.nextMaintenanceDate)}</td>
                       <td>{item.status}</td>
                       <td>{item.brand?.name}</td>
                       <td>{item.model?.name}</td>
